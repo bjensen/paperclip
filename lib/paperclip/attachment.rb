@@ -27,7 +27,7 @@ module Paperclip
     # +instance+ is the ActiveRecord object instance it's attached to, and
     # +options+ is the same as the hash passed to +has_attached_file+.
     def initialize name, instance, options = {}
-      @name              = CGI::unescape(name)
+      @name              = name
       @instance          = instance
 
       options = self.class.default_options.merge(options)
@@ -88,9 +88,11 @@ module Paperclip
       self.clear
 
       return nil if uploaded_file.nil?
+      
+      unescaped_file_name = CGI.unescape(uploaded_file.original_filename.strip)
 
       @queued_for_write[:original]   = to_tempfile(uploaded_file)
-      instance_write(:file_name,       uploaded_file.original_filename.strip)
+      instance_write(:file_name,       unescaped_file_name)
       instance_write(:content_type,    uploaded_file.content_type.to_s.strip)
       instance_write(:file_size,       uploaded_file.size.to_i)
       instance_write(:fingerprint,     uploaded_file.fingerprint)
