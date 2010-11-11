@@ -27,7 +27,7 @@ module Paperclip
     # +instance+ is the ActiveRecord object instance it's attached to, and
     # +options+ is the same as the hash passed to +has_attached_file+.
     def initialize name, instance, options = {}
-      @name              = name
+      @name              = CGI::unescape(name)
       @instance          = instance
 
       options = self.class.default_options.merge(options)
